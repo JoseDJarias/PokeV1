@@ -19,11 +19,11 @@ function Header() {
                         <li><Link to="/about">About</Link> </li>
                     </ul>
                 </nav>
+                <h2>Poke Page</h2>
                 <Routes>
                     <Route path='/' element={<Home />}></Route>
                     <Route path='/about' element={<About />}></Route>
                 </Routes>
-                <h2>Poke Page</h2>
             </>
         </Router>
     );

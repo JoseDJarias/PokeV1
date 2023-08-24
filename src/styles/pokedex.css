@@ -1,0 +1,13 @@
+.poke-card {
+    width: 200px;
+    height: 250px;
+    border-radius: 20px;
+    background-color: red;
+
+}
+
+.poke-card h2 {
+    padding-top: 2%;
+    
+
+}
