@@ -1,8 +1,8 @@
 import React from 'react';
+import {Link } from 'react-router-dom';
 
 import '../styles/header.css'
 import Banner from '../../src/assets/img/Banner.jpg'
-import { Link } from 'react-router-dom';
 
 function Header() {
     return (
