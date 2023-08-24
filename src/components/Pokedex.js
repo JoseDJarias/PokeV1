@@ -5,9 +5,10 @@ function Pokedex() {
 
     useEffect(() => {
         //Realiza una solicitud al API
-        fetch('https://pokeapi.co/api/v2/pokemon/pikachu/')
+        fetch('https://pokeapi.co/api/v2/pokemon/1')
             .then(response => response.json())
-            .then(data => setPokemonData(data))
+            .then(data =>{ 
+                setPokemonData(data)})
             .catch(error => console.error('Error fetching data:', error))
     }, []);
     return (
