@@ -8,11 +8,10 @@
     display: flex;
     justify-content: center;
     width: 100%;
+    background-size: contain;
     height: 300px;
 
 }
-
-
 
 .navigator {
     height: 80px;
