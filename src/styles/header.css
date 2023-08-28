@@ -20,16 +20,16 @@
 }
 
 .navigator ul {
-    padding-left: 10%;
+    padding: 0;
     width: 100%;
     height: 80px;
     list-style: none;
     display: flex;
+    justify-content: space-around;
     margin-top: 0;
 }
 
 .navigator ul li {
-    margin-right: 15%;
     padding-top: 23px;
     width: 10%;
     font-size: large;

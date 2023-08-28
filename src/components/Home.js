@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { getRandomPokemonId } from "../api/PokeApi";
 import defaultImage from '../assets/img/loadPoke.webp'
+import '../styles/home.css'
+import AboutUsImg from '../assets/img/aboutUs.png'
+import {Link } from 'react-router-dom';
+
 
 function Home() {
   const [randomPokemons, setRandomPokemons] = useState([]);
@@ -16,6 +20,7 @@ function Home() {
         fetchedPokemons = await Promise.all(
           pokemonIds.map(async (id) => {
             const data = await getRandomPokemonId(id);
+            console.log(data);
             return data;
           })
         );
@@ -57,6 +62,20 @@ function Home() {
             }
           </div>
         ))}
+      </div>
+      <div className='aboutUs-home'>
+        <img src={AboutUsImg} style={{maxWidth:'300px', maxHeight:'300px'}}
+        loading='lazy'
+        alt='About Us'
+        title='About Us'>
+        </img>
+        <div style={{paddingTop:'10px' }}>
+          It is a huge honor to let you know who we are!
+        </div>
+        <button className='aboutUs-btn'>
+        <Link to="/about">Press</Link>
+        </button>
+        
       </div>
     </>
   );
