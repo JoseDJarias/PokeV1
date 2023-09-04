@@ -1,58 +1,49 @@
-.aboutUs-home {
-    width: 100%;
+.pokemon-container {
+    margin-bottom: 30px;
+
+}
+
+.pokemon-card {
     height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 141, 141, 1);
-    box-shadow: 10px 8px 32px 0 rgba(31, 38, 135, 0.37);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.aboutUs-btn {
-    margin-top: 15px;
-    width: 40%;
-    background: rgba(0, 8, 8, 0.15);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-}
-.aboutUs-btn:hover{
-    background-color: aliceblue;
-    transform: scale(2,2);
-    transition: linear 2s;
-    
-}
-
-.aboutUs-btn a {
-    display: flex;
-    justify-content: center;
-    text-decoration: none;
-    display: flex;
-    color: black;
-}
-
-.pokemon-card{
-    
-    background-image: url('../assets/img/poke-back.gif');
-    background-position: center;
-    max-height: 200px;
-    max-width: 200px;
+    max-width: 300px;
     color: aliceblue;
     margin: 0 auto;
-    }
-.pokemon-card:hover{
-    background-color: aliceblue;
-    transform: scale(3,3);
+    margin-bottom: 40px;
+}
+
+
+
+.pokemon-card:hover {
+    transform: scale(1.2, 1.2);
     transition: ease-in-out 2s;
     position: relative;
     z-index: 2;
 }
-.pokemon-container{
+
+.swiper {
+    background-image: url('../assets/img/lopp.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
 }
+.someOfThem-title{
+    height: 40px;
+    background: rgba( 32, 178, 170, 0.55 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+
+}
+.btn-home{
+    width: 100%;
+    /* display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center; */
+}
+
+
+
