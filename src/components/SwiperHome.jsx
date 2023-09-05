@@ -62,7 +62,7 @@ function SwiperHome() {
             <SwiperSlide>
             <div key={pokemon.id} className="pokemon-card">
             {isLoading ? (
-              <p>Cargando.....</p>
+              <p style={{paddingTop:'130px'}}>Cargando.....</p>
             ) : (
               <>
                 <p style={{margin:0, color:'black', paddingTop:'25px',fontSize:'larger',fontFamily:'sans-serif'}}>{pokemon.name.toUpperCase()}</p>

@@ -3,7 +3,7 @@ import '../styles/home.css'
 import SwiperHome from './SwiperHome';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 
 function Home() {
