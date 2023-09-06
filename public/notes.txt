@@ -2,3 +2,5 @@ https://niantic.helpshift.com/hc/en/6-pokemon-go/faq/124-viewing-the-pokedex/#:~
 
 Making a little game 
 
+flip card
+https://www.geeksforgeeks.org/design-a-flip-card-effect-using-reactjs/

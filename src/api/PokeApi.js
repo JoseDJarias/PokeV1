@@ -20,6 +20,7 @@ async function getPokemonList(url) {
   try {
     const response = await fetch(url);
     const data = await response.json();
+    console.log(data);
     if (data.results && data.results.length !== 0) {
       for (const pokemon of data.results) {
         const url = pokemon.url;
@@ -48,10 +49,19 @@ async function getPokemonDetailByUrl(url) {
     const id = data.id;
     const image = data.sprites.front_default;
     const name = data.name;
+    const weight =data.weight
+    const height = data.height;
+    // const generation = data.past_types['generation']['name'];
+    // console.log(generation);
+    const types = data.types;
+    const stats = data.stats;
     return {
       id,
       name,
-      image
+      image,
+      weight,
+      height,
+      // generation,
     }
 
   } catch (error) {
