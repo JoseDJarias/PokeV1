@@ -1,0 +1,45 @@
+.aboutUs-container{
+    display: flex;
+    padding: 30px;
+    flex-direction: column;
+}
+
+.first-box{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    background: rgba( 255, 255, 255, 0.45 );
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 4px );
+-webkit-backdrop-filter: blur( 4px );
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+    
+}
+
+.text1-container{
+    width: 50%;
+    /* background-color: aqua; */
+    padding: 2%;
+}
+.text2-container{
+    width: 50%;
+    /* background-color: aliceblue; */
+    padding: 2%;
+
+}
+.text1,.text2{
+    display: flex;
+    width: 100%;
+}
+
+.poke-banner1{
+    display: flex;
+    width: 300px;
+    height:400px;
+    margin: 0 auto;
+    background-size: contain;
+    background-position: center;
+    background-image: url('../assets/img/giphy.webp');
+    background-repeat: no-repeat;
+}

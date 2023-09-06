@@ -1,0 +1,48 @@
+.pokemon-container {
+    
+}
+
+.pokemon-card {
+    height: 300px;
+    max-width: 300px;
+    color: aliceblue;
+    margin: 0 auto;
+    margin-bottom: 40px;
+}
+
+
+
+.pokemon-card:hover {
+    transform: scale(1.2, 1.2);
+    transition: ease-in-out 2s;
+    position: relative;
+    z-index: 2;
+}
+
+.swiper {
+    background-image: url('../assets/img/lopp.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+.someOfThem-title{
+    height: 40px;
+    background: rgba( 32, 178, 170, 0.55 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+
+}
+.btn-home{
+    width: 100%;
+    /* display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center; */
+}
+
+
+

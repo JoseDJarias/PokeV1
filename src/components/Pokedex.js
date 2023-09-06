@@ -1,31 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/pokedex.css'
+import { getPokemonList } from '../api/PokeApi';
+import { Height } from '@mui/icons-material';
 function Pokedex() {
-    const [pokemonData, setPokemonData] = useState(null);
-
+    const [list, setList] = useState([]);
     useEffect(() => {
-        //Realiza una solicitud al API
-        fetch('https://pokeapi.co/api/v2/pokemon/1')
-            .then(response => response.json())
-            .then(data =>{ 
-                setPokemonData(data)})
-            .catch(error => console.error('Error fetching data:', error))
-    }, []);
-    return (
-        <div className='poke-card'>
-            <h2>Pikachu</h2>
-            {pokemonData ? (
-                <div>
-                    <p>Nombre: {pokemonData.name}</p>
-                    <p>Altura: {pokemonData.height} </p>
-                    <p>Peso: {pokemonData.weight} </p>
-                    <img src={pokemonData.sprites.front_default} alt='Pikachu' />
-                </div>
-            ) : (
-                <p> Cargando información ...</p>
-            )
+
+        const fetchedListPokemon = async () => {
+
+            try {
+                const url = "https://pokeapi.co/api/v2/pokemon?limit=20"
+                var response = await getPokemonList(url)
+                var data = response.array;
+                console.log(data);
+                setList(data);
             }
-        </div>
+
+            catch (error) {
+
+            }
+
+        }
+        fetchedListPokemon()
+    },[])
+
+    return (
+        <>
+                {list.map((item)=>(
+                <div key={item.id} className='poke-card' style={{width:'300px', height:'300px', backgroundColor:'beige'}}>
+                    <p>{item.name}</p>
+                </div>
+                  
+                ))
+                
+                }
+
+           holaaaaaaaa
+        </>
     );
 }
 
