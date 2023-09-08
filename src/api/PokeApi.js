@@ -10,7 +10,6 @@ async function getRandomPokemonId(id) {
     return [];
   }
 }
-
 export { getRandomPokemonId }
 
 // List

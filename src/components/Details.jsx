@@ -17,7 +17,6 @@ function PokedexDetails() {
         const fetchedListPokemon = async () => {
             try {
                 const response = await getRandomPokemonId(id);
-                console.log('Prueba', response);
                 setDetails(response)
                 setLoading(false)
                 return response;

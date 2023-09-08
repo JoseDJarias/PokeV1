@@ -13,6 +13,7 @@ function Pokedex() {
     const [flip, setFlip] = useState(false);
     // search bar and pagination
     const [searchTerm,setSearchTerm] = useState('');
+    const [next,setNext] = useState('');
 
     useEffect(() => {
 
@@ -22,20 +23,42 @@ function Pokedex() {
                 const url = "https://pokeapi.co/api/v2/pokemon?limit=20"
                 var response = await getPokemonList(url)
                 var data = response.array;
-                // console.log(data);
+                var previous = response.previous;
+                var next = response.next;
                 setList(data);
-            }
+                setNext(next);
 
+
+            }
+            
             catch (error) {
                 console.error('Error fetching data ', error);
             }
-
+            
         }
+
+       
         fetchedListPokemon()
-    }, [])
+    }, []);
+
+    const handleNextPage = async(next) =>{
+        if (next) {
+            try {
+
+                console.log(next)
+                const response = await getPokemonList(next);
+                const data = response.array
+                setList(data);
+                setNext(response.next);
+                // setPrevious(data.previous);
+            } catch (error) {
+                throw(error);
+            }
+        }
+    };
     const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-      };
+    setSearchTerm(e.target.value);  
+      }; 
       const filteredPokemon = list.filter(
         (pokemon) =>
           pokemon.name.toLowerCase().trim().includes(searchTerm.toLowerCase().trim()) || // Filtrar por nombre
@@ -132,6 +155,7 @@ function Pokedex() {
                     </div>
                 </ReactCardFlip>
             ))}
+            <Button variant='outlined' onClick={()=> handleNextPage(next) }>Next</Button>
 
 
         </>
