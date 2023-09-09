@@ -6,6 +6,9 @@ import ReactCardFlip from "react-card-flip";
 import { Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { TextField } from '@mui/material';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
 
 function Pokedex() {
     const [list, setList] = useState([]);
@@ -18,10 +21,10 @@ function Pokedex() {
 
     useEffect(() => {
 
-        const fetchedListPokemon = async () => {
+        const fetchedListPokemon = async (url) => {
 
             try {
-                const url = "https://pokeapi.co/api/v2/pokemon?limit=20"
+                // const url = "https://pokeapi.co/api/v2/pokemon?limit=20"
                 var response = await getPokemonList(url)
                 var data = response.array;
                 var previous = response.previous;
@@ -39,14 +42,15 @@ function Pokedex() {
         }
 
         console.log('Prueba', previous);
-        fetchedListPokemon()
+        fetchedListPokemon("https://pokeapi.co/api/v2/pokemon?limit=20")
     }, []);
 
     const handleNextPage = async (next) => {
         if (next) {
             try {
 
-                console.log(next)
+
+                console.log('Next', next);
                 const response = await getPokemonList(next);
                 const data = response.array
                 setList(data);
@@ -86,6 +90,33 @@ function Pokedex() {
     const handleImageLoad = (event) => {
         event.target.src = event.target.dataset.src;
     };
+
+
+
+    const handlePagination = async (e) => {
+        var value = e.target.textContent;
+        console.log(value);
+        if (value == 1) {
+            var newUrl = 'https://pokeapi.co/api/v2/pokemon?limit=20';
+            var response = await getPokemonList(newUrl);
+            console.log(response);
+            var data = response.array;
+            var previous = response.previous;
+            var next = response.next;
+            setList(data);
+            setNext(next);
+            setPrevious(previous);
+        } else {
+            var newUrl = `https://pokeapi.co/api/v2/pokemon?offset=${(value - 1) * 20}&limit=20`;
+            var response = await getPokemonList(newUrl)
+            var data = response.array;
+            var previous = response.previous;
+            var next = response.next;
+            setList(data);
+            setNext(next);
+            setPrevious(previous);
+        }
+    }
 
 
     return (
@@ -175,6 +206,9 @@ function Pokedex() {
             ))}
             <Button variant='outlined' onClick={() => handleNextPage(next)}>Next</Button>
             <Button variant='outlined' onClick={() => handlePreviousPage(previous)}>  Previous</Button>
+            <Stack spacing={2}>
+                <Pagination count={50} variant="outlined" color="primary" onClick={handlePagination} />
+            </Stack>
 
 
         </>
