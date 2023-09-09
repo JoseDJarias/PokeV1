@@ -12,8 +12,9 @@ function Pokedex() {
     // flip effect card
     const [flip, setFlip] = useState(false);
     // search bar and pagination
-    const [searchTerm,setSearchTerm] = useState('');
-    const [next,setNext] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [next, setNext] = useState('');
+    const [previous, setPrevious] = useState('');
 
     useEffect(() => {
 
@@ -27,21 +28,21 @@ function Pokedex() {
                 var next = response.next;
                 setList(data);
                 setNext(next);
-
+                setPrevious(previous);
 
             }
-            
+
             catch (error) {
                 console.error('Error fetching data ', error);
             }
-            
+
         }
 
-       
+        console.log('Prueba', previous);
         fetchedListPokemon()
     }, []);
 
-    const handleNextPage = async(next) =>{
+    const handleNextPage = async (next) => {
         if (next) {
             try {
 
@@ -50,21 +51,38 @@ function Pokedex() {
                 const data = response.array
                 setList(data);
                 setNext(response.next);
-                // setPrevious(data.previous);
+                setPrevious(response.previous);
             } catch (error) {
-                throw(error);
+                throw (error);
             }
         }
     };
+    const handlePreviousPage = async (previous) => {
+        if (previous) {
+            try {
+
+                console.log('Previo', previous)
+                const response = await getPokemonList(previous);
+                const data = response.array
+                setList(data);
+                setNext(response.next);
+                setPrevious(response.previous);
+            } catch (error) {
+                throw (error);
+            }
+        }
+    };
+
+
     const handleSearch = (e) => {
-    setSearchTerm(e.target.value);  
-      }; 
-      const filteredPokemon = list.filter(
+        setSearchTerm(e.target.value);
+    };
+    const filteredPokemon = list.filter(
         (pokemon) =>
-          pokemon.name.toLowerCase().trim().includes(searchTerm.toLowerCase().trim()) || // Filtrar por nombre
-          pokemon.id.toString().includes(searchTerm) // Filtrar por ID
-      );
-    
+            pokemon.name.toLowerCase().trim().includes(searchTerm.toLowerCase().trim()) || // Filtrar por nombre
+            pokemon.id.toString().includes(searchTerm) // Filtrar por ID
+    );
+
     const handleImageLoad = (event) => {
         event.target.src = event.target.dataset.src;
     };
@@ -155,7 +173,8 @@ function Pokedex() {
                     </div>
                 </ReactCardFlip>
             ))}
-            <Button variant='outlined' onClick={()=> handleNextPage(next) }>Next</Button>
+            <Button variant='outlined' onClick={() => handleNextPage(next)}>Next</Button>
+            <Button variant='outlined' onClick={() => handlePreviousPage(previous)}>  Previous</Button>
 
 
         </>
