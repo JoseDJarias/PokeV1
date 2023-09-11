@@ -18,44 +18,35 @@ function Pokedex() {
     const [searchTerm, setSearchTerm] = useState('');
     const [next, setNext] = useState('');
     const [previous, setPrevious] = useState('');
+    // post and delete favs pokemons
+    const [isAdded, setIsAdded] = useState(true)
+
+    async function getData(url) {
+        var response = await getPokemonList(url)
+        var data = response.array;
+        var previous = response.previous;
+        var next = response.next;
+        setList(data);
+        setNext(next);
+        setPrevious(previous);
+    }
 
     useEffect(() => {
-
         const fetchedListPokemon = async (url) => {
-
             try {
-                // const url = "https://pokeapi.co/api/v2/pokemon?limit=20"
-                var response = await getPokemonList(url)
-                var data = response.array;
-                var previous = response.previous;
-                var next = response.next;
-                setList(data);
-                setNext(next);
-                setPrevious(previous);
-
+                getData(url)
             }
-
             catch (error) {
                 console.error('Error fetching data ', error);
             }
-
         }
-
-        console.log('Prueba', previous);
         fetchedListPokemon("https://pokeapi.co/api/v2/pokemon?limit=20")
     }, []);
 
     const handleNextPage = async (next) => {
         if (next) {
             try {
-
-
-                console.log('Next', next);
-                const response = await getPokemonList(next);
-                const data = response.array
-                setList(data);
-                setNext(response.next);
-                setPrevious(response.previous);
+                getData(next);
             } catch (error) {
                 throw (error);
             }
@@ -64,21 +55,26 @@ function Pokedex() {
     const handlePreviousPage = async (previous) => {
         if (previous) {
             try {
-
-                console.log('Previo', previous)
-                const response = await getPokemonList(previous);
-                const data = response.array
-                setList(data);
-                setNext(response.next);
-                setPrevious(response.previous);
+                getData(previous);
             } catch (error) {
                 throw (error);
             }
         }
     };
 
+    const handlePagination = async (e) => {
+        var value = e.target.textContent;
+        console.log(value);
+        if (value == 1) {
+            var newUrl = 'https://pokeapi.co/api/v2/pokemon?limit=20';
+            getData(newUrl);
+        } else {
+            var newUrl = `https://pokeapi.co/api/v2/pokemon?offset=${(value - 1) * 20}&limit=20`;
+            getData(newUrl)
+        }
+    }
 
-    const handleSearch = (e) => {
+    const handleFilterSearch = (e) => {
         setSearchTerm(e.target.value);
     };
     const filteredPokemon = list.filter(
@@ -91,31 +87,13 @@ function Pokedex() {
         event.target.src = event.target.dataset.src;
     };
 
+    const handleAddPokemon = (id) => {
+        console.log('added', id);
+    }
 
+    const handleDeletePokemon = (id) => {
+        console.log(id);
 
-    const handlePagination = async (e) => {
-        var value = e.target.textContent;
-        console.log(value);
-        if (value == 1) {
-            var newUrl = 'https://pokeapi.co/api/v2/pokemon?limit=20';
-            var response = await getPokemonList(newUrl);
-            console.log(response);
-            var data = response.array;
-            var previous = response.previous;
-            var next = response.next;
-            setList(data);
-            setNext(next);
-            setPrevious(previous);
-        } else {
-            var newUrl = `https://pokeapi.co/api/v2/pokemon?offset=${(value - 1) * 20}&limit=20`;
-            var response = await getPokemonList(newUrl)
-            var data = response.array;
-            var previous = response.previous;
-            var next = response.next;
-            setList(data);
-            setNext(next);
-            setPrevious(previous);
-        }
     }
 
 
@@ -124,7 +102,7 @@ function Pokedex() {
             <TextField
                 label="Search Pokémon"
                 value={searchTerm}
-                onChange={handleSearch}
+                onChange={handleFilterSearch}
                 style={{ margin: '20px', width: '300px' }}
             />
             {filteredPokemon.map((item) => (
@@ -187,7 +165,12 @@ function Pokedex() {
                                 <div className='detail-btn'>
                                     <NavLink to={`/details/${item.id}`}><Button variant="outlined">Details</Button></NavLink>
                                     {/* <Button variant="outlined">Details</Button> */}
-                                    <Button variant="outlined">Add to favs Pokemons</Button>
+                                    {isAdded ? (
+                                        <Button variant="outlined" onClick={() => handleAddPokemon(item.id)}>Add to favs Pokemons</Button>
+                                    ) :
+                                        <Button variant="outlined" onClick={() => handleDeletePokemon(item.id)}>Delete to favs Pokemons</Button>
+
+                                    }
                                 </div>
 
                             </div>

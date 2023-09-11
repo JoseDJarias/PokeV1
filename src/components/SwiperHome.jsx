@@ -27,7 +27,6 @@ function SwiperHome() {
         fetchedPokemons = await Promise.all(
           pokemonIds.map(async (id) => {
             const data = await getRandomPokemonId(id);
-            console.log(data);
             return data;
           })
         );
@@ -47,46 +46,46 @@ function SwiperHome() {
 
   return (
     <>
-        
-        <h2 className='someOfThem-title' >Some of them....</h2>
-       <Swiper
-      modules={[Navigation, Pagination, Scrollbar, A11y]}
-      spaceBetween={50}
-      slidesPerView={1}
-      navigation
-      pagination={{ clickable: true }}
-    //   onSwiper={(swiper) => console.log(swiper)}
-    //   onSlideChange={() => console.log('slide change')}
-    >
-        {randomPokemons.map((pokemon) => (
-            <SwiperSlide>
-            <div key={pokemon.id} className="pokemon-card">
-            {isLoading ? (
-              <p style={{paddingTop:'130px'}}>Cargando.....</p>
-            ) : (
-              <>
-                <p style={{margin:0, color:'black', paddingTop:'25px',fontSize:'larger',fontFamily:'sans-serif'}}>{pokemon.name.toUpperCase()}</p>
-                <img
-                  src={defaultImage}
-                  alt={pokemon.name}
-                  data-src={pokemon.sprites.other["official-artwork"]["front_default"]} // Almacenar la URL real en un atributo personalizado
-                  onLoad={handleImageLoad} // Manejador de carga de imagen
-                  loading="lazy" // Agregar atributo "loading" con valor "lazy"
-                  style={{ maxWidth: "200px", maxHeight: "200px" }} // Define un tamaño máximo
-                  />
-                  <CustomizedRating/>
-              </>
-            )
-            
-          }
-          </div>
 
-        </SwiperSlide>
+      <h2 className='someOfThem-title' >Some of them....</h2>
+      <Swiper
+        modules={[Navigation, Pagination, Scrollbar, A11y]}
+        spaceBetween={50}
+        slidesPerView={1}
+        navigation
+        pagination={{ clickable: true }}
+      //   onSwiper={(swiper) => console.log(swiper)}
+      //   onSlideChange={() => console.log('slide change')}
+      >
+        {randomPokemons.map((pokemon) => (
+          <SwiperSlide>
+            <div key={pokemon.id} className="pokemon-card">
+              {isLoading ? (
+                <p style={{ paddingTop: '130px' }}>Cargando.....</p>
+              ) : (
+                <>
+                  <p style={{ margin: 0, color: 'black', paddingTop: '25px', fontSize: 'larger', fontFamily: 'sans-serif' }}>{pokemon.name.toUpperCase()}</p>
+                  <img
+                    src={defaultImage}
+                    alt={pokemon.name}
+                    data-src={pokemon.sprites.other["official-artwork"]["front_default"]} // Almacenar la URL real en un atributo personalizado
+                    onLoad={handleImageLoad} // Manejador de carga de imagen
+                    loading="lazy" // Agregar atributo "loading" con valor "lazy"
+                    style={{ maxWidth: "200px", maxHeight: "200px" }} // Define un tamaño máximo
+                  />
+                  <CustomizedRating />
+                </>
+              )
+
+              }
+            </div>
+
+          </SwiperSlide>
         ))}
-        
-      
-      
-    </Swiper>
+
+
+
+      </Swiper>
     </>
   );
 }
