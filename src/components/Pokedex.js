@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom';
 import { TextField } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import {addFavorite, deleteFavorite, getAllFavs, getPokemonIdByName} from '../api/Mockapi'
 
 
 function Pokedex() {
@@ -19,7 +20,8 @@ function Pokedex() {
     const [next, setNext] = useState('');
     const [previous, setPrevious] = useState('');
     // post and delete favs pokemons
-    const [isAdded, setIsAdded] = useState(true)
+    const [buttonState,setButtonState] = useState([]);
+    const [addedFavs,setAddedFavs] = useState([])
 
     async function getData(url) {
         var response = await getPokemonList(url)
@@ -29,17 +31,24 @@ function Pokedex() {
         setList(data);
         setNext(next);
         setPrevious(previous);
+        setButtonState(data.map(() => ({ isAdded: true }))); // Inicializar buttonState aquí
     }
-
+    async function setFavsButtonState() {
+      var response = await getAllFavs();
+      setAddedFavs(response);
+     console.log('Prueba',response);
+    }
     useEffect(() => {
         const fetchedListPokemon = async (url) => {
             try {
-                getData(url)
+                getData(url);
+                setFavsButtonState();
             }
             catch (error) {
                 console.error('Error fetching data ', error);
             }
         }
+
         fetchedListPokemon("https://pokeapi.co/api/v2/pokemon?limit=20")
     }, []);
 
@@ -74,6 +83,7 @@ function Pokedex() {
         }
     }
 
+
     const handleFilterSearch = (e) => {
         setSearchTerm(e.target.value);
     };
@@ -87,13 +97,43 @@ function Pokedex() {
         event.target.src = event.target.dataset.src;
     };
 
-    const handleAddPokemon = (id) => {
-        console.log('added', id);
+    const handleAddPokemon = async(name,index) => {
+        try {
+            const id = await getPokemonIdByName(name)
+            if (!id) {
+                await addFavorite({name:name})
+                const updateButtonState = [...buttonState];
+                updateButtonState[index].isAdded = false;
+                setButtonState(updateButtonState);
+                console.log('añadido');
+                
+            }else { 
+                const updateButtonState = [...buttonState];
+                updateButtonState[index].isAdded = false;
+                setButtonState(updateButtonState);
+                console.log(buttonState);
+            }
+        } catch (error) {
+            throw error
+        }
     }
 
-    const handleDeletePokemon = (id) => {
-        console.log(id);
-
+    const handleDeletePokemon = async(name,index) => {
+        console.log(name);
+        try {
+            const id = await getPokemonIdByName(name);
+            console.log(id);
+            if (id) {
+                await deleteFavorite(id);
+                const updatedButtonStates = [...buttonState];
+                updatedButtonStates[index].isAdded = true;
+                setButtonState(updatedButtonStates);
+                
+            }
+    
+        } catch (error) {
+            throw error
+        }
     }
 
 
@@ -105,7 +145,7 @@ function Pokedex() {
                 onChange={handleFilterSearch}
                 style={{ margin: '20px', width: '300px' }}
             />
-            {filteredPokemon.map((item) => (
+            {filteredPokemon.map((item,index) => (
                 <ReactCardFlip isFlipped={flip}
                     flipDirection="vertical">
                     <div style={{
@@ -164,11 +204,10 @@ function Pokedex() {
                                 <div className='poke-name' >{item.name}</div>
                                 <div className='detail-btn'>
                                     <NavLink to={`/details/${item.id}`}><Button variant="outlined">Details</Button></NavLink>
-                                    {/* <Button variant="outlined">Details</Button> */}
-                                    {isAdded ? (
-                                        <Button variant="outlined" onClick={() => handleAddPokemon(item.id)}>Add to favs Pokemons</Button>
+                                    {buttonState[index].isAdded ? (
+                                        <Button variant="outlined" onClick={() => handleAddPokemon(item.name,index)}>Add to favs Pokemon</Button>
                                     ) :
-                                        <Button variant="outlined" onClick={() => handleDeletePokemon(item.id)}>Delete to favs Pokemons</Button>
+                                        <Button variant="outlined" onClick={() => handleDeletePokemon(item.name,index)}>Delete to favs Pokemons</Button>
 
                                     }
                                 </div>
