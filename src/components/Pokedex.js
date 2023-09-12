@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
 import { TextField } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import {addFavorite, deleteFavorite, getAllFavs, getPokemonIdByName} from '../api/Mockapi'
+import { addFavorite, deleteFavorite, getAllFavs, getPokemonIdByName } from '../api/Mockapi'
 
 
 function Pokedex() {
@@ -20,9 +20,11 @@ function Pokedex() {
     const [next, setNext] = useState('');
     const [previous, setPrevious] = useState('');
     // post and delete favs pokemons
-    const [buttonState,setButtonState] = useState([]);
-    const [addedFavs,setAddedFavs] = useState([])
+    const [buttonState, setButtonState] = useState([]);
+    const [addedFavs, setAddedFavs] = useState([])
 
+    // update: next,previous,list and button(mockapi) states 
+    // and fetch by url
     async function getData(url) {
         var response = await getPokemonList(url)
         var data = response.array;
@@ -33,10 +35,18 @@ function Pokedex() {
         setPrevious(previous);
         setButtonState(data.map(() => ({ isAdded: true }))); // Inicializar buttonState aquí
     }
+    // fetch favorites from mockapi
     async function setFavsButtonState() {
-      var response = await getAllFavs();
-      setAddedFavs(response);
-     console.log('Prueba',response);
+        try {
+            var favsResponse = await getAllFavs();
+            for (const favs of favsResponse) {
+                setAddedFavs(favs.name);
+
+            }
+
+        } catch (error) {
+
+        }
     }
     useEffect(() => {
         const fetchedListPokemon = async (url) => {
@@ -52,7 +62,8 @@ function Pokedex() {
         fetchedListPokemon("https://pokeapi.co/api/v2/pokemon?limit=20")
     }, []);
 
-    const handleNextPage = async (next) => {
+    // Pagination, btn next and previous page
+    const handleNextPage = async () => {
         if (next) {
             try {
                 getData(next);
@@ -61,7 +72,7 @@ function Pokedex() {
             }
         }
     };
-    const handlePreviousPage = async (previous) => {
+    const handlePreviousPage = async () => {
         if (previous) {
             try {
                 getData(previous);
@@ -80,34 +91,41 @@ function Pokedex() {
         } else {
             var newUrl = `https://pokeapi.co/api/v2/pokemon?offset=${(value - 1) * 20}&limit=20`;
             getData(newUrl)
+
         }
-    }
+    }// Pagination, btn next and previous page
 
-
+    // filter search
     const handleFilterSearch = (e) => {
+        // onChange we catch the input value
         setSearchTerm(e.target.value);
-    };
+    }; //this value if it's included in the id or poke name 
+    // it will render the page with the filter list
     const filteredPokemon = list.filter(
         (pokemon) =>
             pokemon.name.toLowerCase().trim().includes(searchTerm.toLowerCase().trim()) || // Filtrar por nombre
             pokemon.id.toString().includes(searchTerm) // Filtrar por ID
-    );
+    );// filter search
 
+    // take out the default image when it's already load;
     const handleImageLoad = (event) => {
         event.target.src = event.target.dataset.src;
     };
 
-    const handleAddPokemon = async(name,index) => {
+    // Mockapi
+    const handleAddPokemon = async (name, index) => {
         try {
+            // make a fetch with the name to get the id 
             const id = await getPokemonIdByName(name)
+            //if there is not an id; it'll be added
             if (!id) {
-                await addFavorite({name:name})
+                await addFavorite({ name: name })
                 const updateButtonState = [...buttonState];
                 updateButtonState[index].isAdded = false;
                 setButtonState(updateButtonState);
                 console.log('añadido');
-                
-            }else { 
+
+            } else {
                 const updateButtonState = [...buttonState];
                 updateButtonState[index].isAdded = false;
                 setButtonState(updateButtonState);
@@ -118,24 +136,25 @@ function Pokedex() {
         }
     }
 
-    const handleDeletePokemon = async(name,index) => {
+    const handleDeletePokemon = async (name, index) => {
         console.log(name);
         try {
+            // make a fetch with the name to get the id 
             const id = await getPokemonIdByName(name);
+            // if there is it, it'll be delete it
             console.log(id);
             if (id) {
                 await deleteFavorite(id);
                 const updatedButtonStates = [...buttonState];
                 updatedButtonStates[index].isAdded = true;
                 setButtonState(updatedButtonStates);
-                
+
             }
-    
+
         } catch (error) {
             throw error
         }
-    }
-
+    }// Mockapi
 
     return (
         <>
@@ -145,9 +164,10 @@ function Pokedex() {
                 onChange={handleFilterSearch}
                 style={{ margin: '20px', width: '300px' }}
             />
-            {filteredPokemon.map((item,index) => (
+            {filteredPokemon.map((item, index) => (
                 <ReactCardFlip isFlipped={flip}
                     flipDirection="vertical">
+                    {/* number box */}
                     <div style={{
                         width: '270px',
                         height: '250px',
@@ -174,7 +194,8 @@ function Pokedex() {
                             borderRadius: '5px'
                         }} onClick={() => setFlip(!flip)}>
                             Flip</button>
-                    </div>
+                    </div>  {/* number box */}
+                    {/* poke info */}
                     <div style={{
                         width: '270px',
                         height: '280px',
@@ -205,9 +226,9 @@ function Pokedex() {
                                 <div className='detail-btn'>
                                     <NavLink to={`/details/${item.id}`}><Button variant="outlined">Details</Button></NavLink>
                                     {buttonState[index].isAdded ? (
-                                        <Button variant="outlined" onClick={() => handleAddPokemon(item.name,index)}>Add to favs Pokemon</Button>
+                                        <Button variant="outlined" onClick={() => handleAddPokemon(item.name, index)}>Add to favs Pokemon</Button>
                                     ) :
-                                        <Button variant="outlined" onClick={() => handleDeletePokemon(item.name,index)}>Delete to favs Pokemons</Button>
+                                        <Button variant="outlined" onClick={() => handleDeletePokemon(item.name, index)}>Delete to favs Pokemons</Button>
 
                                     }
                                 </div>
@@ -223,14 +244,27 @@ function Pokedex() {
                             borderRadius: '5px'
                         }} onClick={() => setFlip(!flip)}>
                             Flip</button>
-                    </div>
+                    </div> {/* poke info */}
+
                 </ReactCardFlip>
             ))}
-            <Button variant='outlined' onClick={() => handleNextPage(next)}>Next</Button>
-            <Button variant='outlined' onClick={() => handlePreviousPage(previous)}>  Previous</Button>
+            {/* next and previous btn and paginator */}
+            {next === null ? (
+                <Button variant='outlined' disabled onClick={() => handleNextPage()}>Next</Button>
+            ) :
+                <Button variant='outlined' onClick={() => handleNextPage()}>Next</Button>
+            }
+            {previous === null ? (
+                <Button variant='outlined' disabled onClick={() => handlePreviousPage()}>  Previous</Button>
+
+            ) :
+                <Button variant='outlined' onClick={() => handlePreviousPage()}>Previous</Button>
+            }
             <Stack spacing={2}>
-                <Pagination count={50} variant="outlined" color="primary" onClick={handlePagination} />
+                <Pagination count={65} variant="outlined" hidePrevButton hideNextButton onClick={handlePagination} />
             </Stack>
+            {/* next and previous btn and paginator */}
+
 
 
         </>
