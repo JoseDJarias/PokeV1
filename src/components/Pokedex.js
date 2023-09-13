@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/pokedex.css'
 import { getPokemonList } from '../api/PokeApi';
+import { getAll } from '../api/PokeApi';
 import defaultImage from '../assets/img/loadPoke.webp'
 import ReactCardFlip from "react-card-flip";
 import { Button } from '@mui/material';
@@ -15,14 +16,12 @@ function Pokedex() {
     const [list, setList] = useState([]);
     // flip effect card
     const [flip, setFlip] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
     // search bar and pagination
     const [searchTerm, setSearchTerm] = useState('');
     const [next, setNext] = useState('');
     const [previous, setPrevious] = useState('');
     // post and delete favs pokemons
     const [buttonState, setButtonState] = useState([]);
-    const [addedFavs, setAddedFavs] = useState([]);
 
 
 
@@ -30,7 +29,6 @@ function Pokedex() {
     async function getData(url) {
         var response = await getPokemonList(url)
         var data = response.array;
-        console.log(data);
         var previous = response.previous;
         var next = response.next;
         setList(data);
@@ -42,42 +40,66 @@ function Pokedex() {
     async function setFavsButtonState(url) {
         try {
             var favsResponse = await getAllFavs();
-            var vectorFavs = [];
-            favsResponse.map((favs) => {
-                vectorFavs.push(favs.name)
-            });
-            // console.log(vectorFavs);
-            var response = await getPokemonList(url)
+            console.log(favsResponse);
+            var vectorFavs = favsResponse.map((favs) => favs.name); // Utilizar map directamente para crear el vectorFavs
+
+            var response = await getPokemonList(url);
             const data = response.array;
-            if (vectorFavs.length <1) {
-                setIsLoading(false);
-                return null
+        
+            if (vectorFavs.length < 1) {
+              console.log('Entre aqui');
+              return null;
             }
-            for (let index = 0; index < vectorFavs.length; index++) {
-                const array = data.map((pokemon, i) => {
-                    if (vectorFavs[index] == pokemon.name) {
-                        const updatedButtonStates = [...buttonState];
-                        updatedButtonStates[i].isAdded = false;
-                        console.log('encontrado en la posicion:', i);
-                         return setButtonState(updatedButtonStates);
-                    }
+        
+            const updatedButtonStates = data.map((pokemon) => {
+              if (vectorFavs.includes(pokemon.name)) {
+                return { isAdded: false };
+              } else {
+                return { isAdded: true };
+              }
+            });
+        
+            setButtonState(updatedButtonStates);
+          } catch (error) {
+            console.error('Error fetching favs pokemon from mockapi: ',error);
+          }
+
+        //     var vectorFavs = [];
+        //     favsResponse.map((favs) => {
+        //         vectorFavs.push(favs.name)
+        //     });
+        //     // console.log(vectorFavs);
+        //     var response = await getPokemonList(url)
+        //     const data = response.array;
+        //     if (vectorFavs.length <1) {
+        //         console.log('Entre aqui');
+        //         return null
+        //     }
+        //     console.log('looala');
+        //     for (let index = 0; index < vectorFavs.length; index++) {
+        //         const array = data.map((pokemon, i) => {
+        //             if (vectorFavs[index] == pokemon.name) {
+        //                 const updatedButtonStates = [...buttonState];
+        //                 updatedButtonStates[i].isAdded = false;
+        //                 console.log('encontrado en la posicion:', i);
+        //                  return setButtonState(updatedButtonStates);
+        //             }
                    
-                })
+        //         })
+        //         console.log(buttonState);
                 
-            }
+        //     }
 
-        } catch (error) {
-
-        }
     }
-    console.log();
 
     // OnInit, when the page load
     useEffect(() => {
         const fetchedListPokemon = async (url) => {
             try {
                 getData(url) 
-                setFavsButtonState(url) 
+                setFavsButtonState(url);
+                var data =await getAll()
+                console.log ('Tada',data);
             }
             catch (error) {
                 console.error('Error fetching data ', error);
@@ -183,17 +205,15 @@ function Pokedex() {
 
     return (
         <>
-            <>  {isLoading ? <p>Loading....</p> : (
-                // filteredPokemon.map(() =>(
-                //     console.log('lll')
-                // ))
-                <>
+           
+                
                     <TextField
                         label="Search Pokémon"
                         value={searchTerm}
                         onChange={handleFilterSearch}
                         style={{ margin: '20px', width: '300px' }}
                     />
+                    
                     {filteredPokemon.map((item, index) => (
                         <ReactCardFlip isFlipped={flip}
                             flipDirection="vertical">
@@ -300,12 +320,10 @@ function Pokedex() {
 
 
 
-                </>
+                
 
-            )
-
-            }
-            </>
+          
+            
 
         </>
     );

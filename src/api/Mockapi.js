@@ -5,7 +5,6 @@ async function getAllFavs() {
   const response = await fetch(`${API_URL}/favs`);
   const data = response.json();
   return data
-  console.log(data);
 }
 
 // by name

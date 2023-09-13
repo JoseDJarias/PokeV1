@@ -1,5 +1,17 @@
 //POKE-API
 
+// get all?
+async function getAll () {
+  try {
+    const response = await fetch('https://pokeapi.co/api/v2/pokemon/?limit=1000');
+    const data = response.json();
+    return data
+  } catch (error) {
+    console.error('Error fetching all pokemon', error);
+  }
+}
+export {getAll}
+
 // By ID     
 async function getRandomPokemonId(id) {
   try {
