@@ -1,7 +1,7 @@
 //POKE-API
 
 // get all?
-async function getAll () {
+async function getAll() {
   try {
     const response = await fetch('https://pokeapi.co/api/v2/pokemon/?limit=1000');
     const data = response.json();
@@ -10,7 +10,7 @@ async function getAll () {
     console.error('Error fetching all pokemon', error);
   }
 }
-export {getAll}
+export { getAll }
 
 // By ID     
 async function getRandomPokemonId(id) {
@@ -54,10 +54,10 @@ async function getPokemonDetailByUrl(url) {
   try {
     const response = await fetch(url);
     const data = await response.json();
-
     // data that gonna appear in the pokedex
     const id = data.id;
-    const image = data.sprites.front_default;
+    const image1 = data.sprites.other["official-artwork"]["front_default"];
+    const image2 = data.sprites.other.home["front_default"]
     const name = data.name;
     const weight = data.weight
     const height = data.height;
@@ -68,7 +68,8 @@ async function getPokemonDetailByUrl(url) {
     return {
       id,
       name,
-      image,
+      image1,
+      image2,
       weight,
       height,
       // generation,

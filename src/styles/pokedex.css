@@ -1,25 +1,67 @@
-.img-box{
+.img-box {
     border: 1px solid beige;
-    border-radius: 60px ;
+    border-radius: 60px;
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    padding: 2%;
 }
 
-.number-box{
+.number-box {
     height: 100px;
+    font-family: 'Bungee Spice';
+    animation-name: vibration;
+    animation-duration: 3s;
+    animation-timing-function: linear;
+    animation-iteration-count: 2;
+}
+
+@keyframes vibration {
+    0% {
+        transform: rotate(-2deg);
+    }
+
+    50% {
+        transform: rotate(1deg);
+    }
+
+    100% {
+        transform: rotate(-2deg);
+    }
 }
 
 
 
 
-/* .poke-card {
-    width: 230px;
-    height: 270px;
-    border-radius: 20px;
-    background-color: red;
+
+.poke-ball {
+    margin: 30px auto;
+    width: 250px;
+    height: 250px;
+    border-radius: 40px;
+    border: solid 2px red;
     display: flex;
     flex-direction: column;
-} */
+    max-width: 300px;
+    max-height: 300px;
+    background-size: contain;
+    background-image: url('../assets/img/pokeball.jpg');
+    background-repeat: no-repeat;
+    /* transition: 0.5s ease-in-out, opacity 0.5s ease-in-out; */
 
+}
 
+@media(max-width: 300px) {
+    .poke-ball {
+        display: flex;
+        width: 150px;
+        height: 150px;
+        max-width: 300px;
+        max-height: 300px;
+    }
+}
+
+.poke-ball.transition {}
 
 /* .header-img{
     width: 100%;

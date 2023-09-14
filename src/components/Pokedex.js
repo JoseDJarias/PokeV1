@@ -45,24 +45,24 @@ function Pokedex() {
 
             var response = await getPokemonList(url);
             const data = response.array;
-        
+
             if (vectorFavs.length < 1) {
-              console.log('Entre aqui');
-              return null;
+                console.log('Entre aqui');
+                return null;
             }
-        
+
             const updatedButtonStates = data.map((pokemon) => {
-              if (vectorFavs.includes(pokemon.name)) {
-                return { isAdded: false };
-              } else {
-                return { isAdded: true };
-              }
+                if (vectorFavs.includes(pokemon.name)) {
+                    return { isAdded: false };
+                } else {
+                    return { isAdded: true };
+                }
             });
-        
+
             setButtonState(updatedButtonStates);
-          } catch (error) {
-            console.error('Error fetching favs pokemon from mockapi: ',error);
-          }
+        } catch (error) {
+            console.error('Error fetching favs pokemon from mockapi: ', error);
+        }
 
         //     var vectorFavs = [];
         //     favsResponse.map((favs) => {
@@ -84,10 +84,10 @@ function Pokedex() {
         //                 console.log('encontrado en la posicion:', i);
         //                  return setButtonState(updatedButtonStates);
         //             }
-                   
+
         //         })
         //         console.log(buttonState);
-                
+
         //     }
 
     }
@@ -96,10 +96,10 @@ function Pokedex() {
     useEffect(() => {
         const fetchedListPokemon = async (url) => {
             try {
-                getData(url) 
+                getData(url)
                 setFavsButtonState(url);
-                var data =await getAll()
-                console.log ('Tada',data);
+                var data = await getAll()
+                console.log('Tada', data);
             }
             catch (error) {
                 console.error('Error fetching data ', error);
@@ -205,125 +205,134 @@ function Pokedex() {
 
     return (
         <>
-           
-                
-                    <TextField
-                        label="Search Pokémon"
-                        value={searchTerm}
-                        onChange={handleFilterSearch}
-                        style={{ margin: '20px', width: '300px' }}
-                    />
-                    
-                    {filteredPokemon.map((item, index) => (
-                        <ReactCardFlip isFlipped={flip}
-                            flipDirection="vertical">
-                            {/* number box */}
-                            <>
-                                <div style={{
-                                    width: '270px',
-                                    height: '250px',
-                                    background: 'transparent',
-                                    fontSize: '40px',
-                                    color: 'green',
-                                    margin: '20px',
-                                    borderRadius: '4px',
-                                    textAlign: 'center',
-                                    padding: '20px',
-                                    borderRadius: '20px'
 
-                                }}>
-                                    <div className='number-box'>
-                                        <span>{`000${item.id}`}</span>
+
+            <TextField
+                label="Search Pokémon"
+                value={searchTerm}
+                onChange={handleFilterSearch}
+                style={{ margin: '20px', width: '300px' }}
+            />
+
+            {filteredPokemon.map((item, index) => (
+                <ReactCardFlip isFlipped={flip}
+                    flipDirection="vertical">
+                    {/* number box */}
+                    <>
+                        <div style={{
+                            width: '270px',
+                            height: '250px',
+                            background: 'transparent',
+                            fontSize: '40px',
+                            color: 'green',
+                            margin: '20px',
+                            borderRadius: '4px',
+                            textAlign: 'center',
+                            padding: '20px',
+                            borderRadius: '20px'
+
+                        }}>
+                            <div className='number-box'>
+                                <span>{`000${item.id}`}</span>
+                            </div>
+
+                            <button style={{
+                                width: '150px',
+                                padding: '10px',
+                                fontSize: '20px',
+                                background: '#f5d9fa',
+                                fontWeight: 'bold',
+                                borderRadius: '5px'
+                            }} onClick={() => setFlip(!flip)}>
+                                Flip</button>
+                        </div>
+                    </>{/* number box */}
+                    <>
+                        {/* poke info */}
+                        <div style={{
+                            width: '270px',
+                            height: '280px',
+                            background: 'transparent',
+                            fontSize: '40px',
+                            color: 'green',
+                            margin: '20px',
+                            borderRadius: '4px',
+                            textAlign: 'center',
+                            padding: '20px',
+                            borderRadius: '20px',
+                            marginBottom:'100px'
+                        }}>
+                            <div key={item.id} >
+                                <div className='img-box'>
+                                    <img
+                                        src={defaultImage}
+                                        alt={item.name}
+                                        data-src={item.image1} // Almacenar la URL real en un atributo personalizado
+                                        onLoad={handleImageLoad} // Manejador de carga de imagen
+                                        loading="lazy" // Agregar atributo "loading" con valor "lazy"
+                                        style={{ maxHeight: '100px', maxWidth: '100px' }}
+                                    />
+                                    <img
+                                        src={defaultImage}
+                                        alt={item.name}
+                                        data-src={item.image2} // Almacenar la URL real en un atributo personalizado
+                                        onLoad={handleImageLoad} // Manejador de carga de imagen
+                                        loading="lazy" // Agregar atributo "loading" con valor "lazy"
+                                        style={{ maxHeight: '150px', maxWidth: '150px' }}
+                                    />
+                                </div>
+                                <div className='info-box' style={{}}>
+
+                                    <div className='poke-name' >{item.name}</div>
+                                    <div className='detail-btn'>
+                                        <NavLink to={`/details/${item.id}`}><Button variant="outlined">Details</Button></NavLink>
+                                        {buttonState[index].isAdded ? (
+                                            <Button variant="outlined" onClick={() => handleAddPokemon(item.name, index)}>Add to favs Pokemon</Button>
+                                        ) :
+                                            <Button variant="outlined" onClick={() => handleDeletePokemon(item.name, index)}>Delete to favs Pokemons</Button>
+
+                                        }
                                     </div>
 
-                                    <button style={{
-                                        width: '150px',
-                                        padding: '10px',
-                                        fontSize: '20px',
-                                        background: '#f5d9fa',
-                                        fontWeight: 'bold',
-                                        borderRadius: '5px'
-                                    }} onClick={() => setFlip(!flip)}>
-                                        Flip</button>
                                 </div>
-                            </>{/* number box */}
-                            <>
-                                {/* poke info */}
-                                <div style={{
-                                    width: '270px',
-                                    height: '280px',
-                                    marginBottom: '40px',
-                                    background: 'transparent',
-                                    fontSize: '40px',
-                                    color: 'green',
-                                    margin: '20px',
-                                    borderRadius: '4px',
-                                    textAlign: 'center',
-                                    padding: '20px',
-                                    borderRadius: '20px'
-                                }}>
-                                    <div key={item.id} >
-                                        <div className='img-box'>
-                                            <img
-                                                src={defaultImage}
-                                                alt={item.name}
-                                                data-src={item.image} // Almacenar la URL real en un atributo personalizado
-                                                onLoad={handleImageLoad} // Manejador de carga de imagen
-                                                loading="lazy" // Agregar atributo "loading" con valor "lazy"
-                                                style={{ maxHeight: '250px', maxWidth: '250px' }}
-                                            />
-                                        </div>
-                                        <div className=''>
+                            </div>
+                            <button style={{
+                                width: '150px',
+                                padding: '10px',
+                                fontSize: '20px',
+                                background: '#f5d9fa',
+                                fontWeight: 'bold',
+                                borderRadius: '5px',
+                                marginBottom: '100px'
+                            }} onClick={() => setFlip(!flip)}>
+                                Flip</button>
+                        </div>
+                    </>{/* poke info */}
+                </ReactCardFlip>
+            ))};
+            {/* next and previous btn and paginator */}
+            {next === null ? (
+                <Button variant='outlined' disabled onClick={() => handleNextPage()}>Next</Button>
+            ) :
+                <Button variant='outlined' onClick={() => handleNextPage()}>Next</Button>
+            }
+            {previous === null ? (
+                <Button variant='outlined' disabled onClick={() => handlePreviousPage()}>  Previous</Button>
 
-                                            <div className='poke-name' >{item.name}</div>
-                                            <div className='detail-btn'>
-                                                <NavLink to={`/details/${item.id}`}><Button variant="outlined">Details</Button></NavLink>
-                                                {buttonState[index].isAdded ? (
-                                                    <Button variant="outlined" onClick={() => handleAddPokemon(item.name, index)}>Add to favs Pokemon</Button>
-                                                ) :
-                                                    <Button variant="outlined" onClick={() => handleDeletePokemon(item.name, index)}>Delete to favs Pokemons</Button>
-
-                                                }
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <button style={{
-                                        width: '150px',
-                                        padding: '10px',
-                                        fontSize: '20px',
-                                        background: '#f5d9fa',
-                                        fontWeight: 'bold',
-                                        borderRadius: '5px'
-                                    }} onClick={() => setFlip(!flip)}>
-                                        Flip</button>
-                                </div>
-                            </>{/* poke info */}
-                        </ReactCardFlip>
-                    ))};
-                    {/* next and previous btn and paginator */}
-                    {next === null ? (
-                        <Button variant='outlined' disabled onClick={() => handleNextPage()}>Next</Button>
-                    ) :
-                        <Button variant='outlined' onClick={() => handleNextPage()}>Next</Button>
-                    }
-                    {previous === null ? (
-                        <Button variant='outlined' disabled onClick={() => handlePreviousPage()}>  Previous</Button>
-
-                    ) :
-                        <Button variant='outlined' onClick={() => handlePreviousPage()}>Previous</Button>
-                    }
-                    <Stack spacing={2}>
-                        <Pagination count={65} variant="outlined" hidePrevButton hideNextButton onClick={handlePagination} />
-                    </Stack>
-                    {/* next and previous btn and paginator */}
+            ) :
+                <Button variant='outlined' onClick={() => handlePreviousPage()}>Previous</Button>
+            }
+            <Stack spacing={2}>
+                <Pagination count={65} variant="outlined" hidePrevButton hideNextButton onClick={handlePagination} />
+            </Stack>
+            {/* next and previous btn and paginator */}
 
 
 
-                
 
-          
-            
+
+
+
 
         </>
     );
