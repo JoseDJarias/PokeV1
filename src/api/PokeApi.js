@@ -1,11 +1,27 @@
 //POKE-API
 
 // get all?
-async function getAll() {
+async function getAll(url) {
   try {
-    const response = await fetch('https://pokeapi.co/api/v2/pokemon/?limit=1000');
-    const data = response.json();
-    return data
+    var pokemonData = [];
+    var result = {};
+    try {
+      const response = await fetch('https://pokeapi.co/api/v2/pokemon/?limit=1000');
+      const data = await response.json();
+      if (data.results && data.results.length !== 0) {
+        for (const pokemon of data.results) {
+          const url = pokemon.url;
+          const detailPokemon = await getPokemonDetailByUrl(url);
+          //push al arrelo de pokemons
+          pokemonData.push(detailPokemon);
+        }
+      }
+      result = { count: data.count, next: data.next, previous: data.previous, array: pokemonData }
+    } catch (error) {
+      console.error('Error fetching data', error);
+      return null;
+    }
+    return result;
   } catch (error) {
     console.error('Error fetching all pokemon', error);
   }
