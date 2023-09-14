@@ -5,6 +5,7 @@
     flex-direction: row;
     width: fit-content;
     padding: 2%;
+    width: 260px;
 }
 
 .number-box {
@@ -51,7 +52,7 @@
 
 }
 
-@media(max-width: 300px) {
+@media(max-width: 330px) {
     .poke-ball {
         display: flex;
         width: 150px;
@@ -59,51 +60,22 @@
         max-width: 300px;
         max-height: 300px;
     }
+    .css-1u3bzj6-MuiFormControl-root-MuiTextField-root{
+        display: inline-flex;
+        flex-direction: row;
+        width: 150px;
+        height: 50px;
+        max-width: 200px;
+        max-height: 200px;
+    }
 }
 
-.poke-ball.transition {}
-
-/* .header-img{
-    width: 100%;
-    height: 40%;
-    border-radius: 20px 20px 0 0 ;
-    background-color: aqua;
+.css-1u3bzj6-MuiFormControl-root-MuiTextField-root {
+    background-color: whitesmoke;
 }
 
-.header-img img{
-    width: 120px;
-    height: 120px;
-  
+.menu{
+    height: 50px;
+    background-color: lightseagreen;
+    padding-bottom: 20px;
 }
-
-.second-row{
-    width: 100%;
-    height: 40%;
-    display: flex;
-    flex-direction: row;
-}
-.weight-box{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 30%;
-    height: 100%;
-    background-color: aqua;
-}
-.center-column{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 40%;
-    height: 100%;
-    background-color: antiquewhite;
-}
-
-.generation-box{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 30%;
-    height: 100%;
-    background-color: blue;
-} */

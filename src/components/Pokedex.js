@@ -10,11 +10,16 @@ import { TextField } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { addFavorite, deleteFavorite, getAllFavs, getPokemonIdByName } from '../api/Mockapi'
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
 
 
 function Pokedex() {
-    const [list, setList] = useState([]);
     // filter list
+    const [list, setList] = useState([]);
+    // receive all the data for the filter all pokemon
     const [isFilterList, setIsFilterList] = useState([]);
     // flip effect card
     const [flip, setFlip] = useState(false);
@@ -27,6 +32,14 @@ function Pokedex() {
     const [isData, SetData] = useState(true)
 
 
+    async function FilterList(url) {
+        var responseAllPokemon = await getPokemonList(url)
+        var dataAllPokemon = responseAllPokemon.array;
+
+        setButtonState(dataAllPokemon.map(() => ({ isAdded: true }))); // Inicializar buttonState aquí
+        setFavsButtonState(url)
+        setIsFilterList(dataAllPokemon)
+    }
 
     // update: next,previous,list and button(mockapi) states and fetch by url
     async function getData(url) {
@@ -37,13 +50,13 @@ function Pokedex() {
         setList(data);
         setNext(next);
         setPrevious(previous);
+
         setButtonState(data.map(() => ({ isAdded: true }))); // Inicializar buttonState aquí
     };
     // fetch favorites from mockapi
     async function setFavsButtonState(url) {
         try {
             var favsResponse = await getAllFavs();
-            console.log(favsResponse);
             var vectorFavs = favsResponse.map((favs) => favs.name); // Utilizar map directamente para crear el vectorFavs
 
             var response = await getPokemonList(url);
@@ -67,32 +80,6 @@ function Pokedex() {
             console.error('Error fetching favs pokemon from mockapi: ', error);
         }
 
-        //     var vectorFavs = [];
-        //     favsResponse.map((favs) => {
-        //         vectorFavs.push(favs.name)
-        //     });
-        //     // console.log(vectorFavs);
-        //     var response = await getPokemonList(url)
-        //     const data = response.array;
-        //     if (vectorFavs.length <1) {
-        //         console.log('Entre aqui');
-        //         return null
-        //     }
-        //     console.log('looala');
-        //     for (let index = 0; index < vectorFavs.length; index++) {
-        //         const array = data.map((pokemon, i) => {
-        //             if (vectorFavs[index] == pokemon.name) {
-        //                 const updatedButtonStates = [...buttonState];
-        //                 updatedButtonStates[i].isAdded = false;
-        //                 console.log('encontrado en la posicion:', i);
-        //                  return setButtonState(updatedButtonStates);
-        //             }
-
-        //         })
-        //         console.log(buttonState);
-
-        //     }
-
     }
 
     // OnInit, when the page load
@@ -101,11 +88,7 @@ function Pokedex() {
             try {
                 getData(url)
                 setFavsButtonState(url);
-                var response = await getAll()
-                var data = response.array
-                setFavsButtonState('https://pokeapi.co/api/v2/pokemon/?limit=1000')
-
-                setIsFilterList(data)
+                FilterList('https://pokeapi.co/api/v2/pokemon/?limit=1000')
             }
             catch (error) {
                 console.error('Error fetching data ', error);
@@ -155,15 +138,18 @@ function Pokedex() {
         if (event) {
             setSearchTerm(e.target.value);
             SetData(false)
-        } else SetData(true)
+        } else {
+            SetData(true)
+            setSearchTerm('')
+        }
     }; //this value if it's included in the id or poke name 
     // it will render the page with the filter list
     const filteredPokemon = isFilterList.filter(
-
         (pokemon) =>
             pokemon.name.toLowerCase().trim().includes(searchTerm.toLowerCase().trim()) || // Filtrar por nombre
             pokemon.id.toString().includes(searchTerm) // Filtrar por ID
-    );// filter search
+    );
+    // filter search
 
     // take out the default image when it's already load;
     const handleImageLoad = (event) => {
@@ -216,15 +202,24 @@ function Pokedex() {
 
     return (
         <>
+            <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={2} justifyContent={'center'}>
+                    <Grid item xs={12} md={10}>
+                        <TextField
+                            className='text-field'
+                            label="Search Pokémon"
+                            value={searchTerm}
+                            onChange={handleFilterSearch}
+                            style={{ margin: '20px', width: '300px' }}
+                        />
+
+                    </Grid>
+                </Grid>
+            </Box>
 
 
-            <TextField
-                label="Search Pokémon"
-                value={searchTerm}
-                onChange={handleFilterSearch}
-                style={{ margin: '20px', width: '300px' }}
-            />
             {isData ? (
+
                 <>
                     {list.map((item, index) => (
                         <ReactCardFlip isFlipped={flip}
@@ -315,13 +310,50 @@ function Pokedex() {
                                         background: '#f5d9fa',
                                         fontWeight: 'bold',
                                         borderRadius: '5px',
-                                        marginBottom: '100px'
+                                        marginBottom: '150px'
+
                                     }} onClick={() => setFlip(!flip)}>
                                         Flip</button>
                                 </div>
                             </>{/* poke info */}
                         </ReactCardFlip>
-                    ))}
+
+                    )
+
+                    )}
+                    {/* next and previous btn and paginator */}
+                    <div className='menu'>
+                        <Box sx={{ flexGrow: 1 }}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={4} >
+                                    {previous === null ? (
+                                        <Button variant='outlined' disabled onClick={() => handlePreviousPage()}>  Previous</Button>
+
+                                    ) :
+                                        <Button variant='outlined' onClick={() => handlePreviousPage()}>Previous</Button>
+                                    }
+
+                                </Grid>
+                                <Grid item xs={4}>
+
+                                <Stack spacing={2}>
+                                    <Pagination count={65} variant="outlined" hidePrevButton hideNextButton onClick={handlePagination} />
+                                </Stack>
+                                </Grid>
+                                <Grid item xs={4}>
+
+                                    {next === null ? (
+                                        <Button variant='outlined' disabled onClick={() => handleNextPage()}>Next</Button>
+                                    ) :
+                                        <Button variant='outlined' onClick={() => handleNextPage()}>Next</Button>
+                                    }
+                                </Grid>
+                            </Grid>
+                        </Box>
+                        {/* next and previous btn and paginator */}
+
+                    </div>
+
                 </>
 
             ) : (
@@ -332,7 +364,7 @@ function Pokedex() {
                         <>
                             <div style={{
                                 width: '270px',
-                                height: '250px',
+                                height: '270px',
                                 background: 'transparent',
                                 fontSize: '40px',
                                 color: 'green',
@@ -420,26 +452,30 @@ function Pokedex() {
                             </div>
                         </>{/* poke info */}
                     </ReactCardFlip>
-                ))}</>
+                ))}
+                    {/* next and previous btn and paginator */}
+                    {next === null ? (
+                        <Button variant='outlined' disabled onClick={() => handleNextPage()}>Next</Button>
+                    ) :
+                        <Button variant='outlined' disabled onClick={() => handleNextPage()}>Next</Button>
+                    }
+                    {previous === null ? (
+                        <Button variant='outlined' disabled onClick={() => handlePreviousPage()}>  Previous</Button>
+
+                    ) :
+                        <Button variant='outlined' disabled onClick={() => handlePreviousPage()}>Previous</Button>
+                    }
+                    <Stack spacing={2}>
+                        <Pagination count={65} disabled variant="outlined" hidePrevButton hideNextButton onClick={handlePagination} />
+                    </Stack>
+                    {/* next and previous btn and paginator */}
+
+                </>
+
             )
+
             }
 
-            {/* next and previous btn and paginator */}
-            {next === null ? (
-                <Button variant='outlined' disabled onClick={() => handleNextPage()}>Next</Button>
-            ) :
-                <Button variant='outlined' onClick={() => handleNextPage()}>Next</Button>
-            }
-            {previous === null ? (
-                <Button variant='outlined' disabled onClick={() => handlePreviousPage()}>  Previous</Button>
-
-            ) :
-                <Button variant='outlined' onClick={() => handlePreviousPage()}>Previous</Button>
-            }
-            <Stack spacing={2}>
-                <Pagination count={65} variant="outlined" hidePrevButton hideNextButton onClick={handlePagination} />
-            </Stack>
-            {/* next and previous btn and paginator */}
 
 
 
