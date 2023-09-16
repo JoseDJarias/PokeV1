@@ -10,32 +10,29 @@ import { TextField } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { addFavorite, deleteFavorite, getAllFavs, getPokemonIdByName } from '../api/Mockapi'
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 
 
 function Pokedex() {
-    // filter list
+    // filter by page
     const [list, setList] = useState([]);
     // receive all the data for the filter all pokemon
     const [isFilterList, setIsFilterList] = useState([]);
+    // state of the btn when is added or delete it ot fav pokemons
+    const [buttonState, setButtonState] = useState([]);
     // flip effect card
     const [flip, setFlip] = useState(false);
     // search bar and pagination
     const [searchTerm, setSearchTerm] = useState('');
     const [next, setNext] = useState('');
     const [previous, setPrevious] = useState('');
-    // post and delete favs pokemons
-    const [buttonState, setButtonState] = useState([]);
     const [isData, SetData] = useState(true)
 
 
     async function FilterList(url) {
         var responseAllPokemon = await getPokemonList(url)
         var dataAllPokemon = responseAllPokemon.array;
-
         setButtonState(dataAllPokemon.map(() => ({ isAdded: true }))); // Inicializar buttonState aquí
         setFavsButtonState(url)
         setIsFilterList(dataAllPokemon)
@@ -475,14 +472,6 @@ function Pokedex() {
             )
 
             }
-
-
-
-
-
-
-
-
 
         </>
     );
